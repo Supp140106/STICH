@@ -1,0 +1,52 @@
+:root {
+    /* Default Dark Mode */
+    --bg-main: #0f0f11;
+    --bg-surface: #1a1a1c;
+    --bg-surface-hover: #262629;
+
+    --text-primary: #ededef;
+    --text-secondary: #a1a1aa;
+
+    --border-color: #27272a;
+
+    --accent-blue: #6366f1;
+    --accent-violet: #8b5cf6;
+    --accent-gradient: linear-gradient(135deg, var(--accent-blue), var(--accent-violet));
+
+    --danger: #ef4444;
+    --success: #22c55e;
+
+    --radius-sm: 0.375rem;
+    --radius-md: 0.5rem;
+    --radius-lg: 0.75rem;
+    --radius-xl: 1rem;
+    --radius-2xl: 1.5rem;
+
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+}
+
+.light-theme {
+    --bg-main: #ffffff;
+    --bg-surface: #f4f4f5;
+    --bg-surface-hover: #e4e4e7;
+
+    --text-primary: #09090b;
+    --text-secondary: #52525b;
+
+    --border-color: #e4e4e7;
+}
+
+/* Glassmorphism utility */
+.glass-panel {
+    background: rgba(26, 26, 28, 0.6);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.light-theme .glass-panel {
+    background: rgba(255, 255, 255, 0.6);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+}

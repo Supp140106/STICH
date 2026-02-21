@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>STICH AI</title>
+  <!-- Inter Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/css/modal.css">
+
+  <!-- Highlight.js for code syntax -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+
+<body class="dark-theme">
+  <div id="app" class="app-layout">
+
+    <!-- Sidebar -->
+    <aside id="sidebar" class="sidebar">
+      <div class="sidebar-header">
+        <div class="logo">
+          <i data-lucide="zap"></i>
+          <span>STICH</span>
+        </div>
+        <button class="icon-btn new-chat-btn" id="newChatBtn" title="New Chat">
+          <i data-lucide="plus"></i>
+        </button>
+      </div>
+
+      <div class="sidebar-search">
+        <i data-lucide="search"></i>
+        <input type="text" placeholder="Search chats...">
+      </div>
+
+      <div class="sidebar-section">
+        <div class="section-title">Recent Chats</div>
+        <ul class="chat-list" id="chatList">
+          <!-- Filled by JS -->
+        </ul>
+      </div>
+
+      <div class="sidebar-nav">
+        <a href="#" class="nav-link active" id="navChats"><i data-lucide="message-square"></i> Chats</a>
+        <a href="#" class="nav-link" id="navModels"><i data-lucide="box"></i> Models</a>
+        <a href="#" class="nav-link" id="navMarketplace"><i data-lucide="shopping-bag"></i> Marketplace</a>
+        <a href="#" class="nav-link" id="navSettings"><i data-lucide="settings"></i> Settings</a>
+      </div>
+    </aside>
+
+    <!-- Main Chat Area -->
+    <main class="main-content">
+
+      <!-- Topbar -->
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="icon-btn sidebar-toggle" id="sidebarToggle">
+            <i data-lucide="menu"></i>
+          </button>
+
+          <div class="model-selector">
+            <span class="connection-indicator connected" id="connectionIndicator"></span>
+            <select id="modelSelect" class="glass-select">
+              <optgroup label="Local Models">
+                <option value="ollama-llama3">Llama 3 (Ollama)</option>
+                <option value="ollama-mistral">Mistral (Ollama)</option>
+              </optgroup>
+              <optgroup label="Cloud Models">
+                <option value="openai-gpt4">GPT-4o (OpenAI)</option>
+                <option value="anthropic-claude">Claude 3.5 Sonnet</option>
+                <option value="google-gemini">Gemini 1.5 Pro</option>
+              </optgroup>
+            </select>
+            <i data-lucide="chevron-down" class="dropdown-icon"></i>
+          </div>
+        </div>
+
+        <div class="topbar-right">
+          <button class="icon-btn" id="exportChatBtn" title="Export Chat to Markdown" style="display: none;"><i
+              data-lucide="download"></i></button>
+          <button class="icon-btn" id="deleteChatBtn" title="Delete Chat"
+            style="display: none; color: var(--danger);"><i data-lucide="trash-2"></i></button>
+        </div>
+      </header>
+
+      <!-- Chat History Area -->
+      <div class="chat-container">
+        <div class="chat-scroll-area" id="chatMessages">
+
+          <!-- Empty State -->
+          <div class="empty-state" id="emptyState">
+            <div class="empty-icon-wrapper">
+              <i data-lucide="sparkles"></i>
+            </div>
+            <h2>How can I help you today?</h2>
+            <p>Select a model and start typing to begin.</p>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Input Area -->
+      <div class="input-area">
+
+        <!-- Attached Files Preview Area -->
+        <div id="attachmentsPreview" class="attachments-preview"></div>
+
+        <div class="input-container glass-panel">
+          <input type="file" id="fileAttachment" style="display: none;" accept="image/*, .pdf, .csv, .txt" multiple>
+          <button class="icon-btn attach-btn" id="attachBtn" title="Attach file"><i
+              data-lucide="paperclip"></i></button>
+          <textarea id="promptInput" placeholder="Ask anything..." rows="1"></textarea>
+          <button class="icon-btn voice-btn" title="Voice input"><i data-lucide="mic"></i></button>
+          <button class="send-btn" id="sendBtn"><i data-lucide="send"></i></button>
+        </div>
+        <div class="input-footer">
+          <label class="toggle-label">
+            <input type="checkbox" id="systemPromptToggle">
+            <span>System Prompt</span>
+          </label>
+          <div class="slider-group" style="display: flex; align-items: center; gap: 0.5rem;">
+            <i data-lucide="thermometer"></i>
+            <input type="range" id="tempSlider" min="0" max="1" step="0.1" value="0.7">
+            <span id="tempValue" style="font-size: 0.75rem; color: var(--text-secondary); width: 1.5rem;">0.7</span>
+          </div>
+          <p class="disclaimer">AI can make mistakes. Consider verifying important information.</p>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Models & API Settings Modal -->
+  <div class="modal-overlay" id="apiModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Models & Connections</h2>
+        <button class="icon-btn close-btn" id="closeApiModal"><i data-lucide="x"></i></button>
+      </div>
+
+      <div class="modal-tabs">
+        <button class="tab-btn active" data-tab="localTab">Local (Ollama)</button>
+        <button class="tab-btn" data-tab="cloudTab">Cloud APIs</button>
+      </div>
+
+      <div class="tab-content active" id="localTab">
+        <p style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 1rem;">Ollama runs models locally.
+          Enter a model tag (e.g. <code>llama3</code>, <code>mistral</code>) to install it to your machine.</p>
+        <div class="form-group flex-group">
+          <input type="text" id="ollamaPullInput" class="form-control" placeholder="smollm:135m">
+          <button class="btn-secondary" id="pullModelBtn"><i data-lucide="download"></i> Pull</button>
+        </div>
+        <div id="pullProgress" class="pull-progress"></div>
+      </div>
+
+      <div class="tab-content" id="cloudTab">
+        <div class="form-group">
+          <label for="openaiKey">OpenAI API Key</label>
+          <input type="password" id="openaiKey" class="form-control" placeholder="sk-...">
+        </div>
+        <div class="form-group">
+          <label for="anthropicKey">Anthropic API Key</label>
+          <input type="password" id="anthropicKey" class="form-control" placeholder="sk-ant-...">
+        </div>
+        <div class="form-group">
+          <label for="geminiKey">Google Gemini API Key</label>
+          <input type="password" id="geminiKey" class="form-control" placeholder="AIzaSy...">
+        </div>
+      </div>
+
+      <button class="btn-primary" id="saveApiModalBtn" style="margin-top: 1.5rem;">Save Setup</button>
+    </div>
+  </div>
+
+  <script src="/js/neutralino.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+  <script src="/js/store.js"></script>
+  <script src="/js/main.js"></script>
+</body>
+
+</html>

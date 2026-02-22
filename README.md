@@ -3,7 +3,10 @@
   <p>A beautifully designed, highly functional, hybrid AI chat client built with Neutralino.js, integrating both local models (Ollama) and top-tier cloud models (OpenAI, Anthropic, Gemini).</p>
 </div>
 
-![Screenshot of STICH AI App]((placeholder for screenshot))
+<img width="2558" height="1544" alt="image" src="https://github.com/user-attachments/assets/f779de0e-b3ea-4208-a933-8063fac6d48c" />
+<img width="2558" height="1544" alt="image" src="https://github.com/user-attachments/assets/544ac487-a25a-4af9-9767-2bba95a69596" />
+
+
 
 ## ✨ Features
 
